@@ -5,7 +5,6 @@ import pickle
 import math
 import time
 import os
-import json
 
 # -----------------------------------------
 # Load trajectory + regions from pickle
@@ -14,8 +13,8 @@ with open("sim-traj.pkl", "rb") as f:
     data = pickle.load(f)
 traj = data 
 
-with open("sim-regions.json", "r") as f:
-    data = json.load(f)
+with open("sim-regions.pkl", "rb") as f:
+    data = pickle.load(f)
 regions = data 
 
 
