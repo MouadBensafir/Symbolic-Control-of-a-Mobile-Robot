@@ -1,0 +1,5 @@
+numpy
+google-generativeai
+joblib
+matplotlib
+pybullet
