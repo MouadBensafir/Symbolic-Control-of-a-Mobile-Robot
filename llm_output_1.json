@@ -1,74 +1,32 @@
 {
-    "reasoning": "The user goal 'draw a W on the map' is a geometric task requiring decomposition into an ordered sequence of waypoints. The 'W' shape is represented by five distinct rectangular regions (W1 through W5) to be visited in sequence. These regions are positioned within the 2D workspace [0, 10] x [0, 10], ensuring each region has a minimum dimension greater than 0.5 units and all lie within bounds.\n\nThe DFA is constructed to enforce this strict sequential visit. The alphabet consists of these five region names and 'None' for free space. States track the progress through the sequence. A 'q_accept' state signifies successful completion. Per the system constraints, a 'q_trap' state is defined *only* in the presence of regions to avoid; as no such regions were specified in the user goal, 'q_trap' and any 'Obstacle' region are omitted. Transitions for 'None' inputs always result in a self-loop in non-accepting states, allowing the robot to traverse free space. Visiting any region out of the current sequence causes a self-loop, providing flexibility but not advancing the task.",
+    "reasoning": "The user goal specifies two distinct rectangular regions: R1 as a 3x3 square in the top-left corner, and R2 as a 3x3 square in the bottom-right corner of the [0,10]x[0,10] workspace. These were translated directly into geometric coordinates. The task requires visiting R1 *then* R2 in strict sequence. This strict ordering necessitates a `q_trap` state for premature arrival at R2. The DFA includes states to track progress (q0 for R1, q1 for R2) and handles free space traversal ('None' input) by self-looping. The `q_accept` and `q_trap` states include self-loops on all alphabet inputs for completeness.",
     "regions": {
-        "W1": [
+        "R1": [
             [
-                0.5,
-                2.5
+                0,
+                3
             ],
             [
-                8.5,
-                9.5
+                7,
+                10
             ],
             [
-                -3.14,
-                3.14
+                -3.14159,
+                3.14159
             ]
         ],
-        "W2": [
+        "R2": [
             [
-                2.5,
-                4.5
+                7,
+                10
             ],
             [
-                0.5,
-                1.5
+                0,
+                3
             ],
             [
-                -3.14,
-                3.14
-            ]
-        ],
-        "W3": [
-            [
-                4.5,
-                6.5
-            ],
-            [
-                8.5,
-                9.5
-            ],
-            [
-                -3.14,
-                3.14
-            ]
-        ],
-        "W4": [
-            [
-                6.5,
-                8.5
-            ],
-            [
-                0.5,
-                1.5
-            ],
-            [
-                -3.14,
-                3.14
-            ]
-        ],
-        "W5": [
-            [
-                8.5,
-                10.0
-            ],
-            [
-                8.5,
-                9.5
-            ],
-            [
-                -3.14,
-                3.14
+                -3.14159,
+                3.14159
             ]
         ]
     },
@@ -76,17 +34,12 @@
         "states": [
             "q0",
             "q1",
-            "q2",
-            "q3",
-            "q4",
-            "q_accept"
+            "q_accept",
+            "q_trap"
         ],
         "alphabet": [
-            "W1",
-            "W2",
-            "W3",
-            "W4",
-            "W5",
+            "R1",
+            "R2",
             "None"
         ],
         "start_state": "q0",
@@ -96,28 +49,13 @@
         "transitions": [
             {
                 "from": "q0",
-                "input": "W1",
+                "input": "R1",
                 "to": "q1"
             },
             {
                 "from": "q0",
-                "input": "W2",
-                "to": "q0"
-            },
-            {
-                "from": "q0",
-                "input": "W3",
-                "to": "q0"
-            },
-            {
-                "from": "q0",
-                "input": "W4",
-                "to": "q0"
-            },
-            {
-                "from": "q0",
-                "input": "W5",
-                "to": "q0"
+                "input": "R2",
+                "to": "q_trap"
             },
             {
                 "from": "q0",
@@ -126,28 +64,13 @@
             },
             {
                 "from": "q1",
-                "input": "W1",
+                "input": "R1",
                 "to": "q1"
             },
             {
                 "from": "q1",
-                "input": "W2",
-                "to": "q2"
-            },
-            {
-                "from": "q1",
-                "input": "W3",
-                "to": "q1"
-            },
-            {
-                "from": "q1",
-                "input": "W4",
-                "to": "q1"
-            },
-            {
-                "from": "q1",
-                "input": "W5",
-                "to": "q1"
+                "input": "R2",
+                "to": "q_accept"
             },
             {
                 "from": "q1",
@@ -155,124 +78,34 @@
                 "to": "q1"
             },
             {
-                "from": "q2",
-                "input": "W1",
-                "to": "q2"
-            },
-            {
-                "from": "q2",
-                "input": "W2",
-                "to": "q2"
-            },
-            {
-                "from": "q2",
-                "input": "W3",
-                "to": "q3"
-            },
-            {
-                "from": "q2",
-                "input": "W4",
-                "to": "q2"
-            },
-            {
-                "from": "q2",
-                "input": "W5",
-                "to": "q2"
-            },
-            {
-                "from": "q2",
-                "input": "None",
-                "to": "q2"
-            },
-            {
-                "from": "q3",
-                "input": "W1",
-                "to": "q3"
-            },
-            {
-                "from": "q3",
-                "input": "W2",
-                "to": "q3"
-            },
-            {
-                "from": "q3",
-                "input": "W3",
-                "to": "q3"
-            },
-            {
-                "from": "q3",
-                "input": "W4",
-                "to": "q4"
-            },
-            {
-                "from": "q3",
-                "input": "W5",
-                "to": "q3"
-            },
-            {
-                "from": "q3",
-                "input": "None",
-                "to": "q3"
-            },
-            {
-                "from": "q4",
-                "input": "W1",
-                "to": "q4"
-            },
-            {
-                "from": "q4",
-                "input": "W2",
-                "to": "q4"
-            },
-            {
-                "from": "q4",
-                "input": "W3",
-                "to": "q4"
-            },
-            {
-                "from": "q4",
-                "input": "W4",
-                "to": "q4"
-            },
-            {
-                "from": "q4",
-                "input": "W5",
-                "to": "q_accept"
-            },
-            {
-                "from": "q4",
-                "input": "None",
-                "to": "q4"
-            },
-            {
                 "from": "q_accept",
-                "input": "W1",
+                "input": "R1",
                 "to": "q_accept"
             },
             {
                 "from": "q_accept",
-                "input": "W2",
-                "to": "q_accept"
-            },
-            {
-                "from": "q_accept",
-                "input": "W3",
-                "to": "q_accept"
-            },
-            {
-                "from": "q_accept",
-                "input": "W4",
-                "to": "q_accept"
-            },
-            {
-                "from": "q_accept",
-                "input": "W5",
+                "input": "R2",
                 "to": "q_accept"
             },
             {
                 "from": "q_accept",
                 "input": "None",
                 "to": "q_accept"
+            },
+            {
+                "from": "q_trap",
+                "input": "R1",
+                "to": "q_trap"
+            },
+            {
+                "from": "q_trap",
+                "input": "R2",
+                "to": "q_trap"
+            },
+            {
+                "from": "q_trap",
+                "input": "None",
+                "to": "q_trap"
             }
         ]
     }
