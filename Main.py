@@ -1,4 +1,4 @@
-from Parameters import TOTAL_CELLS, U_vals, x1_range, x2_range
+from Parameters import TOTAL_CELLS, U_vals
 from Labels import precompute_labels_parallel
 from Abstraction import build_transition_table_parallel
 from Specification_LLM import generate_spec_from_text, parse_dfa_from_json
