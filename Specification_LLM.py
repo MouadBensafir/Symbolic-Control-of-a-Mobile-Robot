@@ -1,3 +1,4 @@
+import os
 import google.generativeai as genai
 import numpy as np
 import json
@@ -6,7 +7,7 @@ import json
 # ----------------------------
 # LLM & Spec Parsing 
 # ----------------------------
-genai.configure(api_key="AIzaSyDuUffkJ-KOSbEFa1f7RfskN3U-P9RDxIo")
+genai.configure(api_key=os.getenv("API_KEY"))
 
 
 def generate_spec_from_text(user_prompt):
