@@ -4,7 +4,7 @@ import math
 # ----------------------------
 # Physics & Grid Parameters
 # ----------------------------
-Nx1, Nx2, Nx3 = 100, 100, 30
+Nx1, Nx2, Nx3 = 75, 75, 30
 Nu1, Nu2 = 3, 5
 tau = 1
 
