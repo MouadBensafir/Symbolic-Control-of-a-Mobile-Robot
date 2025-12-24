@@ -202,11 +202,12 @@ def main(page: ft.Page):
                     # Animate the simulation
                     current_synthesis_log.value = "Creating Animation..."
                     page.update()
-                    animation_path = animate_gui(traj, regions)  
+                    save_path = f"animation{int(x0)}_{int(y0)}.gif"
+                    animation_path = animate_gui(traj,regions, save_path)  
 
                     # Animation Card
                     anim_card = ft.Container(
-                        content=ft.Image(src=animation_path, fit=ft.ImageFit.CONTAIN),
+                        content=ft.Image(src=save_path, fit=ft.ImageFit.CONTAIN),
                         padding=10,
                         border=ft.border.all(1, "#3f3f46"),
                         border_radius=10,
