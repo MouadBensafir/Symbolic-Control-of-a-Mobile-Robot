@@ -1,12 +1,14 @@
+import os
 import google.generativeai as genai
 import numpy as np
 import json
-
-
+from dotenv import load_dotenv
 # ----------------------------
 # LLM & Spec Parsing 
 # ----------------------------
-genai.configure(api_key="AIzaSyDuUffkJ-KOSbEFa1f7RfskN3U-P9RDxIo")
+load_dotenv()
+API_KEY = os.getenv("GOOGLE_API_KEY")
+genai.configure(api_key=API_KEY)
 
 
 def generate_spec_from_text(user_prompt):

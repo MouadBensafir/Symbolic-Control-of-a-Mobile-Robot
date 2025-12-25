@@ -3,3 +3,6 @@ google-generativeai
 joblib
 matplotlib
 pybullet
+flet
+imageio
+imageio-ffmpeg

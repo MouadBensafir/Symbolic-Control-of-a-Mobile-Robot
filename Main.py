@@ -9,7 +9,6 @@ from Plotting import simulate, plot_sim
 from Animation import animate
 import numpy as np
     
-    
 # ----------------------------
 # 1. Get User Goal using LLM
 # ----------------------------

@@ -1,1 +1,47 @@
+# Byte-compiled / cache
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.env
+.venv
+venv/
+env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Python tooling
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+
+# VS Code
+.vscode/
+
+# Generated plots or animations
+*.png
+*.mp4
+*.gif
+
+# Large data/output (adjust as needed)
+outputs/
+data/
+tmp/

@@ -112,3 +112,43 @@ def plot_sim(regions_dict, traj):
     plt.grid(True, linestyle='--', alpha=0.3)
     plt.title(f"Symbolic Control: {len(traj)-1} Steps")
     plt.show()
+
+
+# ----------------------------
+# Plotting for GUI
+# ----------------------------
+
+def plot_sim_gui(regions_dict, traj):
+    fig, ax = plt.subplots(figsize=(10, 10), facecolor='white')
+    ax.set_facecolor('white')
+    ax.set_xlim(x1_range)
+    ax.set_ylim(x2_range)
+    ax.set_xlabel("x1")
+    ax.set_ylabel("x2")
+
+    # Plot Regions
+    colors = ['#ffcccc', '#ccffcc', '#ccccff', '#ffffcc', '#e6ccff']
+    c_idx = 0
+    for label, bounds in regions_dict.items():
+        if label == "None": continue
+        x_min, x_max = bounds[0]
+        y_min, y_max = bounds[1]
+
+        rect = patches.Rectangle((x_min, y_min), x_max-x_min, y_max-y_min,
+                                 linewidth=1, edgecolor='black', facecolor=colors[c_idx%5], alpha=0.5)
+        ax.add_patch(rect)
+        ax.text(x_min+0.1, y_min+0.1, label, fontsize=12, fontweight='bold')
+        c_idx += 1
+
+    # Plot Trajectory
+    if len(traj) > 1:
+        ax.plot(traj[:,0], traj[:,1], 'b.-', linewidth=1, markersize=3, label="Trajectory")
+        ax.scatter(traj[0,0], traj[0,1], c='g', s=150, marker='*', label='Start', zorder=5)
+        ax.scatter(traj[-1,0], traj[-1,1], c='r', s=150, marker='X', label='End', zorder=5)
+        ax.legend()
+
+    plt.grid(True, linestyle='--', alpha=0.3)
+    plt.title(f"Symbolic Control: {len(traj)-1} Steps")
+
+    plt.close(fig)
+    return fig
