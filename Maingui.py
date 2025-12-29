@@ -14,12 +14,12 @@ from Controller import synthesize_optimal_controller
 from Plotting import simulate, plot_sim_gui     
 from Animation import animate_gui       
 
-from flet.matplotlib_chart import MatplotlibChart      
+# from flet.matplotlib_chart import MatplotlibChart      
 
 def create_plot_card(regions, traj):
     fig = plot_sim_gui(regions, traj)
     
-    chart = MatplotlibChart(fig, expand=True, transparent=False)
+    chart = ft.MatplotlibChart(fig, expand=True, transparent=False)
 
     return ft.Container(
         content=chart,
@@ -59,7 +59,7 @@ def main(page: ft.Page):
 
     loading_view = ft.Container(
         content=loading_content,
-        alignment=ft.alignment.center,
+        alignment=ft.Alignment.CENTER,
         expand=True,
         visible=True
     )
@@ -92,7 +92,7 @@ def main(page: ft.Page):
 
             synthesis_content = ft.Container(
                 content=synthesis_log,
-                alignment=ft.alignment.center,
+                alignment=ft.Alignment.CENTER,
                 expand=True,
             )
 
