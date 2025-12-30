@@ -6,3 +6,4 @@ pybullet
 flet
 imageio
 imageio-ffmpeg
+dotenv
