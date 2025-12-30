@@ -1,6 +1,7 @@
 import flet as ft
 import threading
 import os
+import matplotlib
 import numpy as np
 import time
 
@@ -14,12 +15,15 @@ from Controller import synthesize_optimal_controller
 from Plotting import simulate, plot_sim_gui     
 from Animation import animate_gui       
 
-# from flet.matplotlib_chart import MatplotlibChart      
+
+matplotlib.use("svg")
+from flet.matplotlib_chart import MatplotlibChart 
 
 def create_plot_card(regions, traj):
     fig = plot_sim_gui(regions, traj)
     
-    chart = ft.MatplotlibChart(fig, expand=True, transparent=False)
+    
+    chart = MatplotlibChart(fig, expand=True, transparent=False)
 
     return ft.Container(
         content=chart,
@@ -59,7 +63,7 @@ def main(page: ft.Page):
 
     loading_view = ft.Container(
         content=loading_content,
-        alignment=ft.Alignment.CENTER,
+        alignment=ft.alignment.center,
         expand=True,
         visible=True
     )
@@ -92,7 +96,7 @@ def main(page: ft.Page):
 
             synthesis_content = ft.Container(
                 content=synthesis_log,
-                alignment=ft.Alignment.CENTER,
+                alignment=ft.alignment.center,
                 expand=True,
             )
 
