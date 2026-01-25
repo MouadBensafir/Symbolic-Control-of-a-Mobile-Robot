@@ -3,7 +3,7 @@ numba
 google-generativeai
 joblib
 matplotlib
-pybullet
+# pybullet
 flet
 imageio
 imageio-ffmpeg

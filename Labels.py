@@ -15,7 +15,7 @@ def precompute_labels_parallel(regions_dict, r_map):
     Uses parallel workers to check geometric containment for all 300k cells.
     """
     num_cores = multiprocessing.cpu_count()
-
+    
     def check_chunk(indices):
         local_labels = np.zeros(len(indices), dtype=np.int8)
 

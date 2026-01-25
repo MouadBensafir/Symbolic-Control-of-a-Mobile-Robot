@@ -155,9 +155,9 @@ def animate(traj, regions, assets_dir="Assets", robot_urdf="husky/husky.urdf", f
         pass
 
 
-#==================================
-#       Animation for GUI
-#==================================
+# ==================================
+    #   Animation for GUI
+# ==================================
 def animate_gui(traj, regions,save_path, assets_dir="Assets", robot_urdf="husky/husky.urdf", fps=60):
     if p.isConnected():
         p.disconnect()

@@ -463,7 +463,7 @@ def compute_transitions_cuda(x1_bins, x2_bins, x3_bins, U_vals, w_bounds, tau, N
     T_successors = np.empty(T_offsets[-1], dtype=np.int32)
 
     offsets_device = cuda.to_device(T_offsets)
-    successors_device = cuda.device_array(T_offsets[-1], dtype=np.int32)
+    successors_device = cuda.device_array((T_offsets[-1],), dtype=np.int32)
 
     _fill_transitions_kernel[blocks, threads](
         x1_bins, x2_bins, x3_bins,
