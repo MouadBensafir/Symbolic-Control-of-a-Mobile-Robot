@@ -6,7 +6,7 @@ import numpy as np
 # Controller Synthesis (unique controllers, process-based)
 # ----------------------------
 
-def _controller_chunk(chunk_indices, V, winning_mask, T, dfa_matrix, label_map, n_dfa, n_u):
+def _controller_chunk(chunk_indices, V, winning_mask, T_offsets, T_counts, T_successors, dfa_matrix, label_map, n_dfa, n_u):
     """Compute optimal actions for a subset of winning product states."""
     chunk_controller = {}
     for ps in chunk_indices:
@@ -20,14 +20,17 @@ def _controller_chunk(chunk_indices, V, winning_mask, T, dfa_matrix, label_map, 
         best_worst_case_val = np.inf
 
         for u_idx in range(n_u):
-            succs = T.get((cell_idx, u_idx))
-            if succs is None:
+            trans_idx = cell_idx * n_u + u_idx
+            count = T_counts[trans_idx]
+            if count == 0:
                 continue
+            offset = T_offsets[trans_idx]
 
             current_action_max_val = -np.inf
             is_valid_action = True
 
-            for s_cell in succs:
+            for t in range(count):
+                s_cell = T_successors[offset + t]
                 r_idx = label_map[s_cell]
                 q_next = dfa_matrix[q_idx, r_idx]
                 if q_next == -1:
@@ -53,7 +56,7 @@ def _controller_chunk(chunk_indices, V, winning_mask, T, dfa_matrix, label_map, 
     return chunk_controller
 
 
-def synthesize_optimal_controller(V, winning_mask, T, dfa_matrix, label_map, n_dfa, n_u):
+def synthesize_optimal_controller(V, winning_mask, T_offsets, T_counts, T_successors, dfa_matrix, label_map, n_dfa, n_u):
     """
     Synthesizes a controller that minimizes the worst-case steps to the target.
     Policy: u(s) = argmin_u ( max_{s' in Post(s,u)} V(s') )
@@ -69,7 +72,11 @@ def synthesize_optimal_controller(V, winning_mask, T, dfa_matrix, label_map, n_d
     chunks = [winning_indices[i:i + chunk_size] for i in range(0, len(winning_indices), chunk_size)]
 
     results = Parallel(n_jobs=num_cores, backend="loky")(
-        delayed(_controller_chunk)(chunk, V, winning_mask, T, dfa_matrix, label_map, n_dfa, n_u)
+        delayed(_controller_chunk)(
+            chunk, V, winning_mask,
+            T_offsets, T_counts, T_successors,
+            dfa_matrix, label_map, n_dfa, n_u
+        )
         for chunk in chunks
     )
 

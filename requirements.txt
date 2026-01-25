@@ -1,4 +1,5 @@
 numpy
+numba
 google-generativeai
 joblib
 matplotlib

@@ -17,7 +17,7 @@ from Animation import animate_gui
 
 
 matplotlib.use("svg")
-from flet.matplotlib_chart import MatplotlibChart 
+from flet.matplotlib_chart import MatplotlibChart
 
 def create_plot_card(regions, traj):
     fig = plot_sim_gui(regions, traj)
@@ -35,7 +35,7 @@ def create_plot_card(regions, traj):
     )
 
 
-T = None  # Global Transition Table
+T = None  # Global Transition Table (T_offsets, T_counts, T_successors)
 
 def main(page: ft.Page):
     page.title = "SymBot-LLM"    
@@ -129,6 +129,8 @@ def main(page: ft.Page):
             # 3. Parse Specification
             # ----------------------------
             regions, r_map, s_map, dfa_matrix, a_accept, a_init = parse_dfa_from_json(spec_json)
+            dfa_matrix = np.asarray(dfa_matrix, dtype=np.int32)
+            dfa_flat = dfa_matrix.reshape(-1)
 
             # This uses Parallelism to label all cells instantly
             current_synthesis_log.value = "Precomputing Labels for all states..."
@@ -153,7 +155,7 @@ def main(page: ft.Page):
             current_synthesis_log.value = "Computing Safety.."
             page.update()
             safe_mask = compute_safety_implicit_parallel(
-                T, dfa_matrix, label_map, bad_q_indices, n_cells, n_dfa, n_u
+                T[0], T[1], T[2], dfa_flat, label_map, bad_q_indices, n_cells, n_dfa, n_u
             )
             print(f"   Safe States: {np.sum(safe_mask)}")
 
@@ -166,7 +168,7 @@ def main(page: ft.Page):
                 target_mask[q_idx::n_dfa] = True
 
             V, win_mask = compute_optimal_reachability(
-                safe_mask, target_mask, T, dfa_matrix, label_map, n_dfa, n_u
+                safe_mask, target_mask, T[0], T[1], T[2], dfa_flat, label_map, n_dfa, n_u
             )
             print(f"   Winning States: {np.sum(win_mask)}")
 
@@ -178,7 +180,9 @@ def main(page: ft.Page):
 
                 current_synthesis_log.value = "Synthesizing Controller..."
                 page.update()
-                controller = synthesize_optimal_controller(V, win_mask, T, dfa_matrix, label_map, n_dfa, n_u)
+                controller = synthesize_optimal_controller(
+                    V, win_mask, T[0], T[1], T[2], dfa_matrix, label_map, n_dfa, n_u
+                )
 
                 def simulate_and_display(e):
                     results_column.controls.clear()

@@ -8,7 +8,7 @@ from Controller import synthesize_optimal_controller
 from Plotting import simulate, plot_sim
 from Animation import animate
 import numpy as np
-    
+
 # ----------------------------
 # 1. Get User Goal using LLM
 # ----------------------------
@@ -31,17 +31,19 @@ if spec_json is None:
 # ----------------------------
 # 2. Build Transition Table
 # ----------------------------
-T = build_transition_table_parallel()
-print(f"✅ Physics Ready. Total Transitions: {len(T)}")
+T_offsets, T_counts, T_successors = build_transition_table_parallel()
+print(f"✅ Physics Ready. Total Transitions: {np.count_nonzero(T_counts)}")
 
  
 # ----------------------------
 # 3. Parse Specification
 # ----------------------------
 regions, r_map, s_map, dfa_matrix, a_accept, a_init = parse_dfa_from_json(spec_json)
+dfa_matrix = np.asarray(dfa_matrix, dtype=np.int32)
+dfa_flat = dfa_matrix.reshape(-1)
 
 # This uses Parallelism to label all cells instantly
-label_map = precompute_labels_parallel(regions, r_map)
+label_map = np.asarray(precompute_labels_parallel(regions, r_map), dtype=np.int32)
 
 # 4. Setup Synthesis
 n_cells = TOTAL_CELLS
@@ -58,7 +60,7 @@ print("\n--- SYNTHESIS ---")
 
 # Safety Game
 safe_mask = compute_safety_implicit_parallel(
-    T, dfa_matrix, label_map, bad_q_indices, n_cells, n_dfa, n_u
+    T_offsets, T_counts, T_successors, dfa_flat, label_map, bad_q_indices, n_cells, n_dfa, n_u
 )
 print(f"   Safe States: {np.sum(safe_mask)}")
 
@@ -69,7 +71,7 @@ for q_idx in target_q_indices:
     target_mask[q_idx::n_dfa] = True
 
 V, win_mask = compute_optimal_reachability(
-    safe_mask, target_mask, T, dfa_matrix, label_map, n_dfa, n_u
+    safe_mask, target_mask, T_offsets, T_counts, T_successors, dfa_flat, label_map, n_dfa, n_u
 )
 print(f"   Winning States: {np.sum(win_mask)}")
 
@@ -78,7 +80,9 @@ print(f"   Winning States: {np.sum(win_mask)}")
 # Synthesize Controller  
 # ----------------------------
 if np.sum(win_mask) > 0:
-    controller = synthesize_optimal_controller(V, win_mask, T, dfa_matrix, label_map, n_dfa, n_u)
+    controller = synthesize_optimal_controller(
+        V, win_mask, T_offsets, T_counts, T_successors, dfa_matrix, label_map, n_dfa, n_u
+    )
     print(f"✅ Controller Synthesized. Size: {len(controller)}")
 else:
     print("❌ Winning Set is empty! Cannot synthesize controller.")
